@@ -249,6 +249,7 @@
         });
 
         // 🛠️ ATTACH SCOPE ATTACHMENTS FOR BUTTON ACTIONS
+        // 🛠️ SCOPE ENFORCEMENT: Expose these globally so HTML inline clicks can execute them
         window.sendRequest = function(pid) {
             socket.emit('send-friend-request', pid);
             document.getElementById('search-output').innerText = "Request sent successfully! 🚀";

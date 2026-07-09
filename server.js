@@ -9,7 +9,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const PORT = 3000;
+// const PORT = 3000;
+// const DB_FILE = path.join(__dirname, 'database.json');
+// This dynamically reads the cloud port, fallback to 3000 locally
+const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'database.json');
 
 app.use(express.static('public'));
@@ -468,9 +471,14 @@ io.on('connection', (socket) => {
 //     console.log(`🚀 System Online at http://localhost:${PORT}`);
 // });
 
-// 🛠️ FIXED: Force port binding to listen to Render's dynamic host variable environment
-const PORT = process.env.PORT || 3000;
+// // 🛠️ FIXED: Force port binding to listen to Render's dynamic host variable environment
+// const PORT = process.env.PORT || 3000;
 
+// server.listen(PORT, '0.0.0.0', () => {
+//     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
+// });
+
+// 🛠️ FIXED: Removed the duplicate "const PORT =" declaration that caused the crash
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
 });
