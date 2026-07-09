@@ -464,6 +464,13 @@ io.on('connection', (socket) => {
     });
 });
 
+// server.listen(PORT, '0.0.0.0', () => {
+//     console.log(`🚀 System Online at http://localhost:${PORT}`);
+// });
+
+// 🛠️ FIXED: Force port binding to listen to Render's dynamic host variable environment
+const PORT = process.env.PORT || 3000;
+
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 System Online at http://localhost:${PORT}`);
+    console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
 });
