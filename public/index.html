@@ -248,8 +248,7 @@
             }
         });
 
-        // 🛠️ ATTACH SCOPE ATTACHMENTS FOR BUTTON ACTIONS
-        // 🛠️ SCOPE ENFORCEMENT: Expose these globally so HTML inline clicks can execute them
+        // SCOPE ENFORCEMENT FOR INTEGRATED HTML ONCLICK BINDERS
         window.sendRequest = function(pid) {
             socket.emit('send-friend-request', pid);
             document.getElementById('search-output').innerText = "Request sent successfully! 🚀";
@@ -398,7 +397,6 @@
             }
         });
 
-        // 💬 DASHBOARD FRIENDS REALTIME MESSAGING CORE LOGIC
         function openFriendChat(friendName) {
             activeChatFriend = friendName;
             document.getElementById('dash-chat-container').classList.remove('hidden');
@@ -431,7 +429,6 @@
             }
         });
 
-        // 💬 LIVE GAMEPLAY MAT IN-GAME CHAT CHANNEL BINDINGS
         document.getElementById('table-chat-send').addEventListener('click', () => {
             const input = document.getElementById('table-chat-input');
             const txt = input.value.trim();
@@ -472,7 +469,6 @@
             }
         }
 
-        // MATCHMAKING LOBBIES GENERAL PIPELINES
         document.getElementById('search-find-btn').addEventListener('click', () => {
             const sid = document.getElementById('search-id-input').value.trim();
             if(sid) socket.emit('search-friend', sid);
@@ -588,7 +584,17 @@
             activeTable = null;
         });
 
-        socket.on('table-error', (msg) => alert(msg));
+        // 🛠️ SELF HEALING FLUSH: Break refresh locks instantly on invalid table joins
+        socket.on('table-error', (msg) => {
+            alert(msg);
+            localStorage.removeItem('tp_active_table_id');
+            document.getElementById('table-canvas').classList.add('hidden');
+            document.getElementById('dashboard-box').classList.remove('hidden');
+            if(activeTable) {
+                socket.emit('leave-table-room', activeTable.id);
+                activeTable = null;
+            }
+        });
     </script>
 </body>
 </html>

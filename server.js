@@ -9,9 +9,6 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// const PORT = 3000;
-// const DB_FILE = path.join(__dirname, 'database.json');
-// This dynamically reads the cloud port, fallback to 3000 locally
 const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'database.json');
 
@@ -23,11 +20,13 @@ const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
 
 function loadDatabase() {
     if (!fs.existsSync(DB_FILE)) {
-        const initialData = { users: {}, chats: {} };
+        const initialData = { users: {}, chats: {}, activeRooms: {} };
         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
         return initialData;
     }
-    return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    if (!data.activeRooms) data.activeRooms = {};
+    return data;
 }
 
 function saveDatabase(data) {
@@ -85,7 +84,6 @@ function compareHands(p1, p2) {
     return s1.primary > s2.primary ? p1 : p2;
 }
 
-let tables = {}; 
 let socketUserMap = {}; 
 
 function createDefaultStats() {
@@ -179,7 +177,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // 👥 FIXED LOOKUP FRIEND SYSTEM WITH CASE INSENSITIVE UPPERCASE FALLBACKS
     socket.on('search-friend', (searchId) => {
         let db = loadDatabase();
         let targetUser = Object.values(db.users).find(u => u.playerId && u.playerId.toUpperCase() === searchId.trim().toUpperCase());
@@ -239,7 +236,6 @@ io.on('connection', (socket) => {
         if (foundUser) socket.emit('profile-data-update', foundUser);
     });
 
-    // 💬 REALTIME PRIVATE CHAT LOG MEMORY
     socket.on('get-friend-chat-history', ({ friendName }) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
@@ -273,14 +269,14 @@ io.on('connection', (socket) => {
         io.to(tableId).emit('inbound-table-msg', msgObj);
     });
 
-    // 🎰 LOUNGE MATCH MATCHING TABLES
+    // 🎰 PERSISTENT DATA-BACKED ROOM MANAGEMENT
     socket.on('create-table', () => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
         let foundUser = Object.values(db.users).find(u => u.username === myUsername);
         let tableId = crypto.randomBytes(3).toString('hex').toUpperCase();
 
-        tables[tableId] = {
+        db.activeRooms[tableId] = {
             id: tableId,
             host: socket.id,
             players: [{ id: socket.id, username: myUsername, chips: foundUser.chips, cards: [], status: 'lobby' }],
@@ -290,27 +286,34 @@ io.on('connection', (socket) => {
             isActive: false
         };
 
+        saveDatabase(db);
         socket.join(tableId);
-        socket.emit('table-joined', tables[tableId]);
+        socket.emit('table-joined', db.activeRooms[tableId]);
     });
 
     socket.on('join-table', (tableId) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
         let foundUser = Object.values(db.users).find(u => u.username === myUsername);
-        let t = tables[tableId];
+        
+        if (!db.activeRooms || !db.activeRooms[tableId]) {
+            return socket.emit('table-error', "Invalid Table ID Room!");
+        }
 
-        if (!t) return socket.emit('table-error', "Invalid Table ID Room!");
-        if (t.players.some(p => p.username === myUsername)) return;
+        let t = db.activeRooms[tableId];
+        if (!t.players.some(p => p.username === myUsername)) {
+            t.players.push({ id: socket.id, username: myUsername, chips: foundUser.chips, cards: [], status: 'lobby' });
+            saveDatabase(db);
+        }
 
-        t.players.push({ id: socket.id, username: myUsername, chips: foundUser.chips, cards: [], status: 'lobby' });
         socket.join(tableId);
         io.to(tableId).emit('table-updated', t);
         socket.emit('table-joined', t);
     });
 
     socket.on('start-table-match', (tableId) => {
-        let t = tables[tableId];
+        let db = loadDatabase();
+        let t = db.activeRooms ? db.activeRooms[tableId] : null;
         if (!t || t.host !== socket.id || t.players.length < 2) return;
 
         let deck = shuffleDeck(createDeck());
@@ -318,7 +321,6 @@ io.on('connection', (socket) => {
         t.currentTurnIndex = 0;
         t.isActive = true;
 
-        let db = loadDatabase();
         t.players.forEach(p => {
             p.cards = [deck.pop(), deck.pop(), deck.pop()];
             p.status = 'playing';
@@ -337,7 +339,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('table-chaal', (tableId) => {
-        let t = tables[tableId];
+        let db = loadDatabase();
+        let t = db.activeRooms ? db.activeRooms[tableId] : null;
         if (!t) return;
         let activePlayer = t.players[t.currentTurnIndex];
         if (activePlayer.id !== socket.id) return;
@@ -345,7 +348,6 @@ io.on('connection', (socket) => {
         activePlayer.chips -= t.chaalAmount;
         t.pot += t.chaalAmount;
 
-        let db = loadDatabase();
         let matchedRecord = Object.values(db.users).find(u => u.username === activePlayer.username);
         if (matchedRecord) matchedRecord.chips = activePlayer.chips;
         saveDatabase(db);
@@ -358,8 +360,9 @@ io.on('connection', (socket) => {
     });
 
     function resolveMatchWinner(tableId, winnerUsername, reason) {
-        let t = tables[tableId];
         let db = loadDatabase();
+        let t = db.activeRooms ? db.activeRooms[tableId] : null;
+        if (!t) return;
 
         t.players.forEach(p => {
             let record = Object.values(db.users).find(u => u.username === p.username);
@@ -374,19 +377,21 @@ io.on('connection', (socket) => {
             record.stats.level = Math.floor(record.stats.gamesWon / 10) + 1;
         });
 
+        t.isActive = false;
         saveDatabase(db);
         io.to(tableId).emit('match-ended', { winner: winnerUsername, reason, pot: t.pot });
-        t.isActive = false;
         io.emit('refresh-admin-dashboard', { users: db.users, chats: db.chats || {} });
     }
 
     socket.on('table-pack', (tableId) => {
-        let t = tables[tableId];
+        let db = loadDatabase();
+        let t = db.activeRooms ? db.activeRooms[tableId] : null;
         if (!t) return;
         let activePlayer = t.players[t.currentTurnIndex];
         if (activePlayer.id !== socket.id) return;
 
         activePlayer.status = 'packed';
+        saveDatabase(db);
         let survivors = t.players.filter(p => p.status === 'playing');
 
         if (survivors.length === 1) {
@@ -402,7 +407,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('table-show', (tableId) => {
-        let t = tables[tableId];
+        let db = loadDatabase();
+        let t = db.activeRooms ? db.activeRooms[tableId] : null;
         if (!t) return;
 
         let survivors = t.players.filter(p => p.status === 'playing');
@@ -412,7 +418,7 @@ io.on('connection', (socket) => {
         resolveMatchWinner(tableId, winObj.username, "Showdown complete!");
     });
 
-    // --- SUPER ADMIN DIRECT OPERATIONS ---
+    // --- SUPER ADMIN OPERATIONS ---
     socket.on('admin-add-chips-action', ({ targetPlayerId, chipAmount }) => {
         let senderUsername = socketUserMap[socket.id];
         let db = loadDatabase();
@@ -447,38 +453,32 @@ io.on('connection', (socket) => {
 
     socket.on('leave-table-room', (tableId) => {
         socket.leave(tableId);
-        if (tables[tableId]) {
-            tables[tableId].players = tables[tableId].players.filter(p => p.id !== socket.id);
-            if (tables[tableId].players.length === 0) delete tables[tableId];
-            else io.to(tableId).emit('table-updated', tables[tableId]);
+        let db = loadDatabase();
+        if (db.activeRooms && db.activeRooms[tableId]) {
+            db.activeRooms[tableId].players = db.activeRooms[tableId].players.filter(p => p.id !== socket.id);
+            if (db.activeRooms[tableId].players.length === 0) {
+                delete db.activeRooms[tableId];
+            } else {
+                io.to(tableId).emit('table-updated', db.activeRooms[tableId]);
+            }
+            saveDatabase(db);
         }
     });
 
     socket.on('ready-next-round', (tableId) => {
-        let t = tables[tableId];
-        if (t) {
-            t.players.forEach(p => p.status = 'lobby');
-            io.to(tableId).emit('table-updated', t);
+        let db = loadDatabase();
+        if (db.activeRooms && db.activeRooms[tableId]) {
+            db.activeRooms[tableId].players.forEach(p => p.status = 'lobby');
+            saveDatabase(db);
+            io.to(tableId).emit('table-updated', db.activeRooms[tableId]);
         }
     });
 
-    socket.on('disconnect', () => {
+     Pel.on('disconnect', () => {
         delete socketUserMap[socket.id];
     });
 });
 
-// server.listen(PORT, '0.0.0.0', () => {
-//     console.log(`🚀 System Online at http://localhost:${PORT}`);
-// });
-
-// // 🛠️ FIXED: Force port binding to listen to Render's dynamic host variable environment
-// const PORT = process.env.PORT || 3000;
-
-// server.listen(PORT, '0.0.0.0', () => {
-//     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
-// });
-
-// 🛠️ FIXED: Removed the duplicate "const PORT =" declaration that caused the crash
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
 });
