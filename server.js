@@ -474,7 +474,7 @@ io.on('connection', (socket) => {
         }
     });
 
-     Pel.on('disconnect', () => {
+     socket.on('disconnect', () => {
         delete socketUserMap[socket.id];
     });
 });
