@@ -8,13 +8,21 @@
 </head>
 <body>
 
+    <!-- BRAND BAR TOP LEFT -->
     <div class="top-branding-bar">Local_teen patti</div>
 
     <div class="game-container">
         
+        <!-- SECTION 1: GLASSMORPHISM SIGN-IN CONTAINER CARD -->
         <div id="auth-box" class="glass-login-card">
             <div class="brand-sub-header">Your logo</div>
             <h1 class="login-title">Login</h1>
+
+            <!-- DYNAMIC USERNAME ACQUISITION BOX FOR CREATING NEW PROFILES -->
+            <div class="input-wrapper hidden" id="username-field-block">
+                <label>In-Game Username</label>
+                <input type="text" id="form-username" placeholder="Choose Game Nickname">
+            </div>
             
             <div class="input-wrapper">
                 <label>Email</label>
@@ -31,9 +39,10 @@
             <div class="divider-text">or continue with</div>
             
             <div class="social-wrapper">
-                <button id="g-btn" class="google-pill-button">
+                <!-- Visually retained but neutralized Google pill button -->
+                <button id="g-btn" class="google-pill-button" style="opacity: 0.6; cursor: not-allowed;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-                    <span>Google</span>
+                    <span>Google (Maintenance)</span>
                 </button>
             </div>
             
@@ -43,6 +52,7 @@
             <p id="auth-err-log" style="color:#ff6b6b; font-size:12px; margin-top:10px; font-weight:bold; text-align:center;"></p>
         </div>
 
+        <!-- MAIN PLATFORM DASHBOARD DASHBOARD -->
         <div id="dashboard-box" class="hidden" style="width:100%;">
             <div class="card profile-strip">
                 <div class="avatar-icon" id="user-avatar">?</div>
@@ -57,6 +67,7 @@
                 <button id="logout-btn" class="logout-style">Logout</button>
             </div>
 
+            <!-- HISTORICAL DATA PERFORMANCE KPI DASHBOARD GRID BLOCK -->
             <div class="card stats-grid-panel">
                 <div class="kpi-box">
                     <div class="kpi-val" id="stat-played">0</div>
@@ -72,6 +83,7 @@
                 </div>
             </div>
 
+            <!-- CORE UTILITY SPLIT LAYER FRAME -->
             <div class="grid-panel">
                 <div class="card sub-panel">
                     <h3>👥 Friends Hub</h3>
@@ -98,6 +110,7 @@
                         </div>
                     </div>
 
+                    <!-- DASHBOARD DIRECT SOCIAL PRIVATE MESSAGING HUB FRAME -->
                     <div id="dash-chat-container" class="hidden" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
                         <h4 id="dash-chat-header" style="margin:0 0 8px 0; color:#ffb300;">Chatting with: --</h4>
                         <div id="dash-chat-logs" class="chat-logs-viewport"></div>
@@ -109,18 +122,25 @@
                 </div>
             </div>
 
+            <!-- EXCLUSIVE COMPREHENSIVE SUPER ADMIN DASHBOARD PANEL -->
             <div id="super-admin-panel" class="card hidden" style="border: 1px solid #ff3d00; text-align: left; margin-top:20px;">
                 <h3 style="color:#ff3d00; margin-top:0;">🛡️ Super Admin Control Management Console</h3>
                 <h4>Registered Member Profiles Directory & Surveillance Caches</h4>
                 <div id="adm-profiles-container" style="display:grid; grid-template-columns:1fr; gap:15px;">
-                    </div>
+                    <!-- Admin profiles injected here dynamically -->
+                </div>
             </div>
         </div>
 
+        <!-- LIVE POKER PLAYING CANVAS TABLE ROOM -->
         <div id="table-canvas" class="card hidden" style="width:100%; max-width:700px; display:grid; grid-template-columns: 1fr 240px; gap:15px;">
             <div>
-                <h2 id="room-header-title" style="font-size:20px;">Room Table ID: --</h2>
-                <div class="table-info"><span id="pot-display">💰 Pot: 0</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 id="room-header-title" style="font-size:18px; margin:0;">Room Table ID: --</h2>
+                    <!-- 🚪 FIXED NAVIGATIONAL RETURN HOME BUTTON -->
+                    <button id="in-game-exit-btn" style="background:#c62828; color:white; font-size:12px; padding:6px 12px; width:auto; margin:0;">Exit Table</button>
+                </div>
+                <div class="table-info" style="margin-top:10px;"><span id="pot-display">💰 Pot: 0</span></div>
                 <h3 id="turn-indicator">Waiting...</h3>
                 
                 <div class="hand-container">
@@ -134,10 +154,11 @@
                     <button id="pack-btn" class="action-btn pack">Pack</button>
                 </div>
                 <button id="dealer-start-btn" class="hidden" style="background:#ffb300; margin-top:15px; color:#000; width:100%;">🃏 Deal Cards</button>
-                <h4 style="margin:15px 0 5px 0;">Table Active Seats:</h4>
+                <h4 style="margin:15px 0 5px 0;">Table Active Seats (Max 4 Players):</h4>
                 <div id="table-seats-list"></div>
             </div>
 
+            <!-- IN-GAME LIVE TABLE BROADCAST MESSAGING CARD PANEL -->
             <div class="table-chat-sidebar" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
                 <div>
                     <h4 style="margin:0 0 10px 0; color:#ffb300; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px;">💬 Table Chat</h4>
@@ -150,6 +171,7 @@
             </div>
         </div>
 
+        <!-- DECISION OVERLAY MODAL PANEL -->
         <div id="endgame-modal" class="modal-overlay hidden">
             <div class="modal-card">
                 <h2 id="modal-winner-msg" style="color:#ffb300; margin-top:0;">Winner Announcement</h2>
@@ -162,47 +184,22 @@
 
     </div>
 
+    <!-- 1. INITIALIZE GLOBAL CHANNELS FIRST -->
     <script src="/socket.io/socket.io.js"></script>
     <script> window.socket = io(); </script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDfUZbWQB70FMj-HIZhxxSbYbUfPPRRmJY",
-            authDomain: "local-teen-patti.firebaseapp.com",
-            projectId: "local-teen-patti",
-            storageBucket: "local-teen-patti.firebasestorage.app",
-            messagingSenderId: "230970714828",
-            appId: "1:230970714828:web:2013a20c6919bba728b069",
-            measurementId: "G-QBT2NTMGTG"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
+    <!-- 2. MODULE CONSOLE -->
+    <script>
         window.triggerGoogleAuth = function() {
-            signInWithPopup(auth, provider).then(async (result) => {
-                const user = result.user;
-                const res = await fetch('/api/google-auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: user.displayName, email: user.email })
-                });
-                myProfile = await res.json();
-                localStorage.setItem('tp_user_profile', JSON.stringify(myProfile));
-                executeLoginPipeline(myProfile);
-            }).catch(err => alert("Google Sign-In Failed: " + err.message));
+            alert("Google Sign-In is paused. Please create an account via the Registration link below!");
         }
-
         window.triggerGoogleSignout = function() { 
             localStorage.clear();
-            signOut(auth).then(() => { location.reload(); }); 
+            location.reload();
         }
     </script>
 
+    <!-- 3. INTERACTIVE MATCHMAKING CLIENT LOGIC -->
     <script>
         const socket = window.socket; 
         let myProfile = null;
@@ -219,24 +216,34 @@
         const toggleAction = document.getElementById('toggle-register-action');
         const emailSubmitBtn = document.getElementById('email-signin-btn');
         const authErrLog = document.getElementById('auth-err-log');
+        const usernameBlock = document.getElementById('username-field-block');
 
         toggleAction.addEventListener('click', () => {
             isRegisterMode = !isRegisterMode;
             document.querySelector('.login-title').innerText = isRegisterMode ? "Register" : "Login";
             emailSubmitBtn.innerText = isRegisterMode ? "Register for free" : "Sign in";
             toggleAction.innerText = isRegisterMode ? "Login here" : "Register for free";
+            
+            if(isRegisterMode) usernameBlock.classList.remove('hidden');
+            else usernameBlock.classList.add('hidden');
         });
 
         emailSubmitBtn.addEventListener('click', async () => {
             const email = document.getElementById('form-email').value.trim();
             const password = document.getElementById('form-pass').value;
-            if(!email || !password) return alert("Fill parameters.");
+            const username = document.getElementById('form-username').value.trim();
+
+            if(!email || !password) return alert("Please fill in email and password.");
+            if(isRegisterMode && !username) return alert("Please pick an In-Game Username.");
 
             const endpoint = isRegisterMode ? '/api/email-register' : '/api/email-login';
+            const payload = { email, password };
+            if(isRegisterMode) payload.username = username;
+
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify(payload)
             });
             const data = await res.json();
             if(data.error) {
@@ -248,7 +255,6 @@
             }
         });
 
-        // SCOPE ENFORCEMENT FOR INTEGRATED HTML ONCLICK BINDERS
         window.sendRequest = function(pid) {
             socket.emit('send-friend-request', pid);
             document.getElementById('search-output').innerText = "Request sent successfully! 🚀";
@@ -291,6 +297,7 @@
             const chats = allChats || {};
 
             container.innerHTML = Object.values(users).map(u => {
+                if(!u) return '';
                 let aggregatedChatsHtml = "";
                 Object.keys(chats).forEach(key => {
                     if(key.includes(u.username)) {
@@ -540,6 +547,22 @@
             }
         }
 
+        // TRIGGER EXIT TABLE SEQUENCE
+        function executeTableExitPipeline() {
+            if(activeTable) {
+                socket.emit('leave-table-room', activeTable.id);
+                activeTable = null;
+            }
+            localStorage.removeItem('tp_active_table_id');
+            document.getElementById('table-canvas').classList.add('hidden');
+            document.getElementById('endgame-modal').classList.add('hidden');
+            document.getElementById('dashboard-box').classList.remove('hidden');
+            triggerProfileReload();
+        }
+
+        document.getElementById('in-game-exit-btn').addEventListener('click', executeTableExitPipeline);
+        document.getElementById('modal-home-btn').addEventListener('click', executeTableExitPipeline);
+
         document.getElementById('dealer-start-btn').addEventListener('click', () => {
             if(activeTable) socket.emit('start-table-match', activeTable.id);
         });
@@ -575,16 +598,7 @@
             socket.emit('ready-next-round', activeTable.id);
         });
 
-        document.getElementById('modal-home-btn').addEventListener('click', () => {
-            document.getElementById('endgame-modal').classList.add('hidden');
-            document.getElementById('table-canvas').classList.add('hidden');
-            document.getElementById('dashboard-box').classList.remove('hidden');
-            localStorage.removeItem('tp_active_table_id');
-            socket.emit('leave-table-room', activeTable.id);
-            activeTable = null;
-        });
-
-        // 🛠️ SELF HEALING FLUSH: Break refresh locks instantly on invalid table joins
+        // 🛠️ HEALING ROUTINE
         socket.on('table-error', (msg) => {
             alert(msg);
             localStorage.removeItem('tp_active_table_id');

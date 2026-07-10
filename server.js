@@ -20,7 +20,7 @@ const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
 
 function loadDatabase() {
     if (!fs.existsSync(DB_FILE)) {
-        const initialData = { users: {}, chats: {}, activeRooms: {} };
+        const initialData = { users: {}, chats: {} };
         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
         return initialData;
     }
@@ -53,6 +53,7 @@ function createDeck() {
     return deck;
 }
 
+// Helper to shuffle
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -84,7 +85,7 @@ function compareHands(p1, p2) {
     return s1.primary > s2.primary ? p1 : p2;
 }
 
-let socketUserMap = {};
+let socketUserMap = {}; 
 
 function createDefaultStats() {
     return { gamesPlayed: 0, gamesWon: 0, winPercentage: 0, level: 1 };
@@ -92,49 +93,26 @@ function createDefaultStats() {
 
 // --- SECURE AUTH CHANNELS ---
 app.post('/api/google-auth', (req, res) => {
-    const { name, email } = req.body;
-    let db = loadDatabase();
-    let userKey = email.replace(/[.$#[\]]/g, "_");
-    const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
-
-    if (db.users[userKey]) {
-        db.users[userKey].isAdmin = checkAdmin;
-        saveDatabase(db);
-        return res.json(db.users[userKey]);
-    }
-
-    const uniqueId = "TP-" + crypto.randomBytes(3).toString('hex').toUpperCase();
-    const newUser = {
-        username: name,
-        email: email,
-        password: "OAuth_Verified_Google",
-        chips: 1000,
-        playerId: uniqueId,
-        friends: [],
-        requests: [],
-        isAdmin: checkAdmin,
-        stats: createDefaultStats()
-    };
-    db.users[userKey] = newUser;
-    saveDatabase(db);
-    res.json(newUser);
+    // Intentionally blocked server side for security alignment
+    return res.status(400).json({ error: "Google Auth is visually paused. Please use email registration!" });
 });
 
 app.post('/api/email-register', (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
     let db = loadDatabase();
-    let userKey = email.replace(/[.$#[\]]/g, "_");
+    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
 
     if (db.users[userKey]) return res.status(400).json({ error: "Account already exists!" });
 
-    const username = email.split('@')[0];
+    // Use requested username, fallback to prefix if missing
+    const finalUsername = (username && username.trim()) ? username.trim() : email.split('@')[0];
     const uniqueId = "TP-" + crypto.randomBytes(3).toString('hex').toUpperCase();
     const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
 
     db.users[userKey] = {
-        username: username,
+        username: finalUsername,
         email: email,
-        password: password,
+        password: password, 
         chips: 1000,
         playerId: uniqueId,
         friends: [],
@@ -149,7 +127,7 @@ app.post('/api/email-register', (req, res) => {
 app.post('/api/email-login', (req, res) => {
     const { email, password } = req.body;
     let db = loadDatabase();
-    let userKey = email.replace(/[.$#[\]]/g, "_");
+    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
     let user = db.users[userKey];
 
     if (!user || user.password !== password) return res.status(400).json({ error: "Invalid credentials!" });
@@ -162,10 +140,10 @@ io.on('connection', (socket) => {
     socket.on('register-socket', (username) => {
         socketUserMap[socket.id] = username;
         socket.join(`user_${username}`);
-
+        
         let db = loadDatabase();
-        let requestingUser = Object.values(db.users).find(u => u.username === username);
-
+        let requestingUser = Object.values(db.users).find(u => u && u.username === username);
+        
         if (requestingUser) {
             if (requestingUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 requestingUser.isAdmin = true;
@@ -179,8 +157,8 @@ io.on('connection', (socket) => {
 
     socket.on('search-friend', (searchId) => {
         let db = loadDatabase();
-        let targetUser = Object.values(db.users).find(u => u.playerId && u.playerId.toUpperCase() === searchId.trim().toUpperCase());
-
+        let targetUser = Object.values(db.users).find(u => u && u.playerId && u.playerId.toUpperCase() === searchId.trim().toUpperCase());
+        
         if (!targetUser) {
             return socket.emit('search-result', { error: "Player ID not found inside database registry!" });
         }
@@ -190,8 +168,8 @@ io.on('connection', (socket) => {
     socket.on('send-friend-request', (targetId) => {
         let db = loadDatabase();
         let senderUsername = socketUserMap[socket.id];
-        let targetUser = Object.values(db.users).find(u => u.playerId && u.playerId.toUpperCase() === targetId.toUpperCase());
-
+        let targetUser = Object.values(db.users).find(u => u && u.playerId && u.playerId.toUpperCase() === targetId.toUpperCase());
+        
         if (targetUser && senderUsername !== targetUser.username) {
             if (!targetUser.requests) targetUser.requests = [];
             if (!targetUser.friends) targetUser.friends = [];
@@ -199,7 +177,7 @@ io.on('connection', (socket) => {
             if (!targetUser.requests.includes(senderUsername) && !targetUser.friends.includes(senderUsername)) {
                 targetUser.requests.push(senderUsername);
                 saveDatabase(db);
-
+                
                 io.to(`user_${targetUser.username}`).emit('refresh-profile-data');
                 io.emit('refresh-admin-dashboard', { users: db.users, chats: db.chats || {} });
             }
@@ -209,9 +187,9 @@ io.on('connection', (socket) => {
     socket.on('respond-request', ({ requester, action }) => {
         let db = loadDatabase();
         let myUsername = socketUserMap[socket.id];
-
-        let me = Object.values(db.users).find(u => u.username === myUsername);
-        let them = Object.values(db.users).find(u => u.username === requester);
+        
+        let me = Object.values(db.users).find(u => u && u.username === myUsername);
+        let them = Object.values(db.users).find(u => u && u.username === requester);
 
         if (!me || !them) return;
         if (!me.requests) me.requests = [];
@@ -232,15 +210,15 @@ io.on('connection', (socket) => {
 
     socket.on('get-latest-profile', (username) => {
         let db = loadDatabase();
-        let foundUser = Object.values(db.users).find(u => u.username === username);
+        let foundUser = Object.values(db.users).find(u => u && u.username === username);
         if (foundUser) socket.emit('profile-data-update', foundUser);
     });
 
     socket.on('get-friend-chat-history', ({ friendName }) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
-        if (!db.chats) db.chats = {};
-
+        if(!db.chats) db.chats = {};
+        
         let chatKey = [myUsername, friendName].sort().join("%%");
         let history = db.chats[chatKey] || [];
         socket.emit('friend-chat-history-loaded', { friendName, history });
@@ -249,12 +227,12 @@ io.on('connection', (socket) => {
     socket.on('send-friend-message', ({ friendName, messageText }) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
-        if (!db.chats) db.chats = {};
+        if(!db.chats) db.chats = {};
 
         let chatKey = [myUsername, friendName].sort().join("%%");
-        if (!db.chats[chatKey]) db.chats[chatKey] = [];
+        if(!db.chats[chatKey]) db.chats[chatKey] = [];
 
-        let msgObj = { sender: myUsername, msg: messageText, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+        let msgObj = { sender: myUsername, msg: messageText, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
         db.chats[chatKey].push(msgObj);
         saveDatabase(db);
 
@@ -265,19 +243,18 @@ io.on('connection', (socket) => {
 
     socket.on('send-table-chat', ({ tableId, messageText }) => {
         let myUsername = socketUserMap[socket.id];
-        let msgObj = { sender: myUsername, msg: messageText, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+        let msgObj = { sender: myUsername, msg: messageText, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
         io.to(tableId).emit('inbound-table-msg', msgObj);
     });
 
-// 🎰 PERSISTENT DATA-BACKED ROOM MANAGEMENT (WITH SAFETY FALLBACKS)
+    // 🎰 PERSISTENT DATA-BACKED ROOM MANAGEMENT WITH A 4-PLAYER LOBBY LIMIT
     socket.on('create-table', () => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
         let foundUser = Object.values(db.users).find(u => u && u.username === myUsername);
-        
-        // 🛠️ SAFE FALLBACK: Prevent crashing if the profile isn't found immediately
-        let userChips = foundUser ? foundUser.chips : 1000;
         let tableId = crypto.randomBytes(3).toString('hex').toUpperCase();
+
+        let userChips = foundUser ? foundUser.chips : 1000;
 
         db.activeRooms[tableId] = {
             id: tableId,
@@ -294,20 +271,26 @@ io.on('connection', (socket) => {
         socket.emit('table-joined', db.activeRooms[tableId]);
     });
 
-    socket.on('join-table', (tableId) => {
+    socket.on('join-table', (incomingTableId) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
         let foundUser = Object.values(db.users).find(u => u && u.username === myUsername);
         
+        // Normalize table ID strings to prevent invalid matches
+        let tableId = incomingTableId.trim().toUpperCase();
+
         if (!db.activeRooms || !db.activeRooms[tableId]) {
             return socket.emit('table-error', "Invalid Table ID Room!");
         }
 
         let t = db.activeRooms[tableId];
+
+        // 🛑 CRUCIAL: 4 Player Cap Check
         if (!t.players.some(p => p.username === myUsername)) {
-            // 🛠️ SAFE FALLBACK
+            if (t.players.length >= 4) {
+                return socket.emit('table-error', "This table lobby is full! Maximum limit is 4 players.");
+            }
             let userChips = foundUser ? foundUser.chips : 1000;
-            
             t.players.push({ id: socket.id, username: myUsername, chips: userChips, cards: [], status: 'lobby' });
             saveDatabase(db);
         }
@@ -331,11 +314,11 @@ io.on('connection', (socket) => {
             p.cards = [deck.pop(), deck.pop(), deck.pop()];
             p.status = 'playing';
             p.chips -= 10;
-
-            let matchedRecord = Object.values(db.users).find(u => u.username === p.username);
+            
+            let matchedRecord = Object.values(db.users).find(u => u && u.username === p.username);
             if (matchedRecord) {
                 matchedRecord.chips = p.chips;
-                if (!matchedRecord.stats) matchedRecord.stats = createDefaultStats();
+                if(!matchedRecord.stats) matchedRecord.stats = createDefaultStats();
                 matchedRecord.stats.gamesPlayed++;
             }
         });
@@ -354,7 +337,7 @@ io.on('connection', (socket) => {
         activePlayer.chips -= t.chaalAmount;
         t.pot += t.chaalAmount;
 
-        let matchedRecord = Object.values(db.users).find(u => u.username === activePlayer.username);
+        let matchedRecord = Object.values(db.users).find(u => u && u.username === activePlayer.username);
         if (matchedRecord) matchedRecord.chips = activePlayer.chips;
         saveDatabase(db);
 
@@ -371,7 +354,7 @@ io.on('connection', (socket) => {
         if (!t) return;
 
         t.players.forEach(p => {
-            let record = Object.values(db.users).find(u => u.username === p.username);
+            let record = Object.values(db.users).find(u => u && u.username === p.username);
             if (!record) return;
 
             if (p.username === winnerUsername) {
@@ -428,10 +411,10 @@ io.on('connection', (socket) => {
     socket.on('admin-add-chips-action', ({ targetPlayerId, chipAmount }) => {
         let senderUsername = socketUserMap[socket.id];
         let db = loadDatabase();
-        let exec = Object.values(db.users).find(u => u.username === senderUsername);
+        let exec = Object.values(db.users).find(u => u && u.username === senderUsername);
         if (!exec || !exec.isAdmin) return;
 
-        let target = Object.values(db.users).find(u => u.playerId === targetPlayerId);
+        let target = Object.values(db.users).find(u => u && u.playerId === targetPlayerId);
         if (target) {
             target.chips += parseInt(chipAmount);
             saveDatabase(db);
@@ -443,15 +426,15 @@ io.on('connection', (socket) => {
     socket.on('admin-remove-user-action', ({ targetPlayerId }) => {
         let senderUsername = socketUserMap[socket.id];
         let db = loadDatabase();
-        let exec = Object.values(db.users).find(u => u.username === senderUsername);
+        let exec = Object.values(db.users).find(u => u && u.username === senderUsername);
         if (!exec || !exec.isAdmin) return;
 
-        let matchKey = Object.keys(db.users).find(k => db.users[k].playerId === targetPlayerId);
+        let matchKey = Object.keys(db.users).find(k => db.users[k] && db.users[k].playerId === targetPlayerId);
         if (matchKey) {
             let deletedUsername = db.users[matchKey].username;
             delete db.users[matchKey];
             saveDatabase(db);
-
+            
             io.emit('refresh-admin-dashboard', { users: db.users, chats: db.chats || {} });
             io.to(`user_${deletedUsername}`).emit('force-logout-eviction');
         }
@@ -480,7 +463,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // 🛠️ FIXED: Replaced "Pel.on" with the valid "socket.on" listener object
     socket.on('disconnect', () => {
         delete socketUserMap[socket.id];
     });
@@ -489,8 +471,3 @@ io.on('connection', (socket) => {
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
 });
-
-
-// server.listen(PORT, '0.0.0.0', () => {
-//     console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
-// });
