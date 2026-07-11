@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arc Tales Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div class="top-branding-bar">ATS</div>
 
     <div class="game-container">
-        
+
         <!-- SECTION 1: SIGN-IN CONTAINER CARD -->
         <div id="auth-box" class="glass-login-card">
             <div class="brand-sub-header">Arc Tales Studio</div>
@@ -21,32 +23,33 @@
                 <label>Profile Nickname</label>
                 <input type="text" id="form-username" placeholder="Choose Custom Nickname">
             </div>
-            
+
             <div class="input-wrapper">
                 <label>Account Email</label>
                 <input type="email" id="form-email" placeholder="username@gmail.com">
             </div>
-            
+
             <div class="input-wrapper">
                 <label>Security Password</label>
                 <input type="password" id="form-pass" placeholder="Password">
             </div>
-            
+
             <!-- ✂️ CLEANED UP REMOVED FAKE BUTTON FOR SECURITY COMPLIANCE -->
             <button id="email-signin-btn" class="classic-signin-btn" style="margin-top: 15px;">Sign in</button>
             <div class="divider-text">or continue with</div>
-            
+
             <div class="social-wrapper">
                 <button id="g-btn" class="google-pill-button" style="opacity: 0.6; cursor: not-allowed;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
                     <span>Google (Maintenance)</span>
                 </button>
             </div>
-            
+
             <div class="register-footer">
                 Don't have an account? <span id="toggle-register-action">Register for free</span>
             </div>
-            <p id="auth-err-log" style="color:#ff6b6b; font-size:12px; margin-top:10px; font-weight:bold; text-align:center;"></p>
+            <p id="auth-err-log"
+                style="color:#ff6b6b; font-size:12px; margin-top:10px; font-weight:bold; text-align:center;"></p>
         </div>
 
         <!-- MAIN PLATFORM DASHBOARD -->
@@ -84,13 +87,14 @@
                     <h3>👥 Connections Matrix</h3>
                     <div style="display:flex; gap:4px; margin-bottom:12px;">
                         <input type="text" id="search-id-input" placeholder="Search unique Player ID">
-                        <button id="search-find-btn" style="width:70px; padding:0; margin:0; background:#ffb300; color:#111;">Find</button>
+                        <button id="search-find-btn"
+                            style="width:70px; padding:0; margin:0; background:#ffb300; color:#111;">Find</button>
                     </div>
                     <div id="search-output" style="font-size:12px; margin-bottom:10px;"></div>
-                    
+
                     <h4>Pending Action Alerts</h4>
                     <div id="requests-box"></div>
-                    
+
                     <h4>My Verified Network (Click to Chat)</h4>
                     <div id="friends-box"></div>
                 </div>
@@ -98,26 +102,32 @@
                 <div class="card sub-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
                         <h3>🎰 Lobby Broker</h3>
-                        <button id="cmd-create-table" style="background:#2e7d32; color:white;">Create Private Table</button>
+                        <button id="cmd-create-table" style="background:#2e7d32; color:white;">Create Private
+                            Table</button>
                         <div style="display:flex; gap:4px; margin-top:8px;">
                             <input type="text" id="join-table-input" placeholder="Enter Table Room ID">
-                            <button id="cmd-join-table" style="width:70px; margin:0; padding:0; background:#ffb300; color:#111;">Join</button>
+                            <button id="cmd-join-table"
+                                style="width:70px; margin:0; padding:0; background:#ffb300; color:#111;">Join</button>
                         </div>
                     </div>
 
-                    <div id="dash-chat-container" class="hidden" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <div id="dash-chat-container" class="hidden"
+                        style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
                         <h4 id="dash-chat-header" style="margin:0 0 8px 0; color:#ffb300;">Chatting with: --</h4>
                         <div id="dash-chat-logs" class="chat-logs-viewport"></div>
                         <div style="display:flex; gap:4px; margin-top:5px;">
-                            <input type="text" id="dash-chat-input" placeholder="Type a message..." style="padding:8px;">
-                            <button id="dash-chat-send" style="width:60px; font-size:12px; padding:0; margin:0; background: var(--casino-gold); color: #000;">Send</button>
+                            <input type="text" id="dash-chat-input" placeholder="Type a message..."
+                                style="padding:8px;">
+                            <button id="dash-chat-send"
+                                style="width:60px; font-size:12px; padding:0; margin:0; background: var(--casino-gold); color: #000;">Send</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- EXCLUSIVE COMPREHENSIVE MASKED SUPER ADMIN DASHBOARD PANEL -->
-            <div id="super-admin-panel" class="card hidden" style="border: 1px solid #ff3d00; text-align: left; margin-top:20px;">
+            <div id="super-admin-panel" class="card hidden"
+                style="border: 1px solid #ff3d00; text-align: left; margin-top:20px;">
                 <h3 style="color:#ff3d00; margin-top:0;">🛡️ Super Admin Control Management Console</h3>
                 <h4>Registered Member Profiles Directory & Caches</h4>
                 <div id="adm-profiles-container" style="display:grid; grid-template-columns:1fr; gap:15px;"></div>
@@ -125,17 +135,24 @@
         </div>
 
         <!-- LIVE STRATEGY CANVAS TABLE ROOM -->
-        <div id="table-canvas" class="card hidden" style="width:100%; max-width:700px; display:grid; grid-template-columns: 1fr 240px; gap:15px;">
+        <div id="table-canvas" class="card hidden"
+            style="width:100%; max-width:700px; display:grid; grid-template-columns: 1fr 240px; gap:15px;">
             <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h2 id="room-header-title" style="font-size:18px; margin:0;">Room Table ID: --</h2>
-                    <button id="in-game-exit-btn" style="background:#c62828; color:white; font-size:12px; padding:6px 12px; width:auto; margin:0;">Exit Table</button>
+                    <button id="in-game-exit-btn"
+                        style="background:#c62828; color:white; font-size:12px; padding:6px 12px; width:auto; margin:0;">Exit
+                        Table</button>
                 </div>
                 <div class="table-info" style="margin-top:10px;"><span id="pot-display">💰 Pot: 0</span></div>
                 <h3 id="turn-indicator">Waiting...</h3>
-                
+
                 <div class="hand-container">
-                    <div id="cards-row"><div class="game-card">?</div><div class="game-card">?</div><div class="game-card">?</div></div>
+                    <div id="cards-row">
+                        <div class="game-card">?</div>
+                        <div class="game-card">?</div>
+                        <div class="game-card">?</div>
+                    </div>
                     <button id="see-cards-btn">See Hand</button>
                 </div>
 
@@ -144,19 +161,25 @@
                     <button id="show-btn" class="action-btn show-style">Show</button>
                     <button id="pack-btn" class="action-btn pack">Pack</button>
                 </div>
-                <button id="dealer-start-btn" class="hidden" style="background:#ffb300; margin-top:15px; color:#000; width:100%;">🃏 Deal Matrix</button>
+                <button id="dealer-start-btn" class="hidden"
+                    style="background:#ffb300; margin-top:15px; color:#000; width:100%;">🃏 Deal Matrix</button>
                 <h4 style="margin:15px 0 5px 0;">Table Active Seats (Max 4 Players):</h4>
                 <div id="table-seats-list"></div>
             </div>
 
-            <div class="table-chat-sidebar" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
+            <div class="table-chat-sidebar"
+                style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
                 <div>
-                    <h4 style="margin:0 0 10px 0; color:#ffb300; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px;">💬 Table Chat</h4>
+                    <h4
+                        style="margin:0 0 10px 0; color:#ffb300; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px;">
+                        💬 Table Chat</h4>
                     <div id="table-chat-logs" class="chat-logs-viewport" style="height:280px;"></div>
                 </div>
                 <div style="display:flex; gap:4px; margin-top:5px;">
-                    <input type="text" id="table-chat-input" placeholder="Text table..." style="padding:6px; font-size:12px;">
-                    <button id="table-chat-send" style="width:50px; font-size:11px; padding:0; margin:0; background: var(--casino-gold); color: #000;">Send</button>
+                    <input type="text" id="table-chat-input" placeholder="Text table..."
+                        style="padding:6px; font-size:12px;">
+                    <button id="table-chat-send"
+                        style="width:50px; font-size:11px; padding:0; margin:0; background: var(--casino-gold); color: #000;">Send</button>
                 </div>
             </div>
         </div>
@@ -167,7 +190,8 @@
                 <p id="modal-reason-msg">Details</p>
                 <hr style="border-color:#333; margin:15px 0;">
                 <button id="modal-replay-btn" style="background:#2e7d32; color:white;">🔄 Replay / Next Round</button>
-                <button id="modal-home-btn" style="background:#c62828; color:white; margin-top:8px;">🏠 Leave & Return Home</button>
+                <button id="modal-home-btn" style="background:#c62828; color:white; margin-top:8px;">🏠 Leave & Return
+                    Home</button>
             </div>
         </div>
 
@@ -176,19 +200,19 @@
     <script src="/socket.io/socket.io.js"></script>
     <script> window.socket = io(); </script>
     <script>
-        window.triggerGoogleAuth = function() { alert("Google Sign-In is paused. Please create an account via the Registration link below!"); }
-        window.triggerGoogleSignout = function() { localStorage.clear(); location.reload(); }
+        window.triggerGoogleAuth = function () { alert("Google Sign-In is paused. Please create an account via the Registration link below!"); }
+        window.triggerGoogleSignout = function () { localStorage.clear(); location.reload(); }
     </script>
 
     <script>
-        const socket = window.socket; 
+        const socket = window.socket;
         let myProfile = null;
         let activeTable = null;
         let myCards = [];
         let cardsVisible = false;
         let isRegisterMode = false;
         let activeChatFriend = null;
-        let cachedAdminPayload = null; 
+        let cachedAdminPayload = null;
 
         document.getElementById('g-btn').addEventListener('click', () => { window.triggerGoogleAuth(); });
         document.getElementById('logout-btn').addEventListener('click', () => { window.triggerGoogleSignout(); });
@@ -203,7 +227,7 @@
             document.querySelector('.login-title').innerText = isRegisterMode ? "Register" : "Login";
             emailSubmitBtn.innerText = isRegisterMode ? "Register for free" : "Sign in";
             toggleAction.innerText = isRegisterMode ? "Login here" : "Register for free";
-            if(isRegisterMode) usernameBlock.classList.remove('hidden');
+            if (isRegisterMode) usernameBlock.classList.remove('hidden');
             else usernameBlock.classList.add('hidden');
         });
 
@@ -212,12 +236,12 @@
             const password = document.getElementById('form-pass').value;
             const username = document.getElementById('form-username').value.trim();
 
-            if(!email || !password) return alert("Please fill in email and password.");
-            if(isRegisterMode && !username) return alert("Please pick an In-Game Username.");
+            if (!email || !password) return alert("Please fill in email and password.");
+            if (isRegisterMode && !username) return alert("Please pick an In-Game Username.");
 
             const endpoint = isRegisterMode ? '/api/email-register' : '/api/email-login';
             const payload = { email, password };
-            if(isRegisterMode) payload.username = username;
+            if (isRegisterMode) payload.username = username;
 
             const res = await fetch(endpoint, {
                 method: 'POST',
@@ -225,7 +249,7 @@
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
-            if(data.error) {
+            if (data.error) {
                 authErrLog.innerText = data.error;
             } else {
                 myProfile = data;
@@ -234,48 +258,48 @@
             }
         });
 
-        window.sendRequest = function(pid) {
+        window.sendRequest = function (pid) {
             socket.emit('send-friend-request', pid);
             document.getElementById('search-output').innerText = "Request sent successfully! 🚀";
         }
 
-        window.respond = function(requester, action) { socket.emit('respond-request', { requester, action }); }
+        window.respond = function (requester, action) { socket.emit('respond-request', { requester, action }); }
 
         function executeLoginPipeline(profileData) {
             myProfile = profileData;
             socket.emit('register-socket', myProfile.username);
             document.getElementById('auth-box').classList.add('hidden');
-            
+
             const savedTableId = localStorage.getItem('tp_active_table_id');
             if (savedTableId) socket.emit('join-table', savedTableId);
             else document.getElementById('dashboard-box').classList.remove('hidden');
-            
+
             document.getElementById('user-avatar').innerText = myProfile.username.charAt(0).toUpperCase();
             triggerProfileReload();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = localStorage.getItem('tp_user_profile');
-            if(savedSession) executeLoginPipeline(JSON.parse(savedSession));
+            if (savedSession) executeLoginPipeline(JSON.parse(savedSession));
         });
 
-        function triggerProfileReload() { if(myProfile) socket.emit('get-latest-profile', myProfile.username); }
+        function triggerProfileReload() { if (myProfile) socket.emit('get-latest-profile', myProfile.username); }
 
         socket.on('refresh-profile-data', () => { triggerProfileReload(); });
         socket.on('force-logout-eviction', () => { window.triggerGoogleSignout(); });
 
         function populateAdminDirectory(usersObj, allChats) {
             const container = document.getElementById('adm-profiles-container');
-            if (!container) return; 
+            if (!container) return;
 
             const users = usersObj;
             const chats = allChats || {};
 
             container.innerHTML = Object.values(users).map(u => {
-                if(!u) return '';
+                if (!u) return '';
                 let aggregatedChatsHtml = "";
                 Object.keys(chats).forEach(key => {
-                    if(key.includes(u.username)) {
+                    if (key.includes(u.username)) {
                         let participants = key.split("%%");
                         let targetFriend = participants.find(p => p !== u.username) || "Self";
                         aggregatedChatsHtml += `
@@ -286,7 +310,7 @@
                     }
                 });
 
-                if(!aggregatedChatsHtml) aggregatedChatsHtml = "<p style='font-size:11px; color:#aaa; margin:5px 0 0 0;'>No active chat transcripts cache logs.</p>";
+                if (!aggregatedChatsHtml) aggregatedChatsHtml = "<p style='font-size:11px; color:#aaa; margin:5px 0 0 0;'>No active chat transcripts cache logs.</p>";
 
                 // 🔐 FIXED: SECURE THE USER PASSWORD INPUT FIELD MASK TO AVOID PHISHING BLOCKS[cite: 2]
                 return `
@@ -332,7 +356,7 @@
             document.getElementById('dash-username').innerText = data.username;
             document.getElementById('dash-id').innerText = `Player ID: ${data.playerId}`;
             document.getElementById('dash-chips').innerText = `🪙 Balance: ${data.chips}`;
-            
+
             const stats = data.stats || { gamesPlayed: 0, gamesWon: 0, winPercentage: 0, level: 1 };
             document.getElementById('dash-level').innerText = `Level ${stats.level}`;
             document.getElementById('stat-played').innerText = stats.gamesPlayed;
@@ -375,19 +399,19 @@
         document.getElementById('dash-chat-send').addEventListener('click', () => {
             const input = document.getElementById('dash-chat-input');
             const txt = input.value.trim();
-            if(txt && activeChatFriend) {
+            if (txt && activeChatFriend) {
                 socket.emit('send-friend-message', { friendName: activeChatFriend, messageText: txt });
                 input.value = "";
             }
         });
 
         socket.on('friend-chat-history-loaded', ({ friendName, history }) => {
-            if(activeChatFriend !== friendName) return;
+            if (activeChatFriend !== friendName) return;
             renderChatBubbleLogs('dash-chat-logs', history);
         });
 
         socket.on('inbound-friend-msg', ({ friendName, msgObj }) => {
-            if(activeChatFriend === friendName) {
+            if (activeChatFriend === friendName) {
                 const logs = document.getElementById('dash-chat-logs');
                 logs.innerHTML += `<div class="msg-bubble ${msgObj.sender === myProfile.username ? 'me' : 'them'}"><small><b>${msgObj.sender}</b> [${msgObj.time}]</small><div>${msgObj.msg}</div></div>`;
                 logs.scrollTop = logs.scrollHeight;
@@ -397,7 +421,7 @@
         document.getElementById('table-chat-send').addEventListener('click', () => {
             const input = document.getElementById('table-chat-input');
             const txt = input.value.trim();
-            if(txt && activeTable) {
+            if (txt && activeTable) {
                 socket.emit('send-table-chat', { tableId: activeTable.id, messageText: txt });
                 input.value = "";
             }
@@ -417,25 +441,25 @@
 
         function adminAddChips(pid) {
             const el = document.getElementById(`amt-${pid}`);
-            if(el.value && el.value > 0) socket.emit('admin-add-chips-action', { targetPlayerId: pid, chipAmount: el.value });
+            if (el.value && el.value > 0) socket.emit('admin-add-chips-action', { targetPlayerId: pid, chipAmount: el.value });
         }
 
         function adminRemoveUser(pid) {
-            if(confirm("⚠️ Execute Purge Routine: Permanently evict this profile segment?")) {
+            if (confirm("⚠️ Execute Purge Routine: Permanently evict this profile segment?")) {
                 socket.emit('admin-remove-user-action', { targetPlayerId: pid });
             }
         }
 
         document.getElementById('search-find-btn').addEventListener('click', () => {
             const sid = document.getElementById('search-id-input').value.trim();
-            if(sid) socket.emit('search-friend', sid);
+            if (sid) socket.emit('search-friend', sid);
         });
 
         socket.on('search-result', (res) => {
             const out = document.getElementById('search-output');
-            if(res.error) { out.style.color="#ff5252"; out.innerText = res.error; }
+            if (res.error) { out.style.color = "#ff5252"; out.innerText = res.error; }
             else {
-                out.style.color="#4caf50";
+                out.style.color = "#4caf50";
                 out.innerHTML = `${res.username} verified! <button onclick="sendRequest('${res.playerId}')" style='padding:2px 5px; font-size:11px; width:auto; display:inline; background:#ffb300; color:#111;'>Link Up</button>`;
             }
         });
@@ -443,7 +467,7 @@
         document.getElementById('cmd-create-table').addEventListener('click', () => { socket.emit('create-table'); });
         document.getElementById('cmd-join-table').addEventListener('click', () => {
             const tid = document.getElementById('join-table-input').value.trim();
-            if(tid) socket.emit('join-table', tid);
+            if (tid) socket.emit('join-table', tid);
         });
 
         socket.on('table-joined', (tableObj) => {
@@ -452,7 +476,7 @@
             document.getElementById('dashboard-box').classList.add('hidden');
             document.getElementById('table-canvas').classList.remove('hidden');
             document.getElementById('room-header-title').innerText = `Room Node ID: ${tableObj.id}`;
-            document.getElementById('table-chat-logs').innerHTML = ""; 
+            document.getElementById('table-chat-logs').innerHTML = "";
             updateTableUI(tableObj);
         });
 
@@ -473,7 +497,7 @@
                     document.getElementById('turn-indicator').innerText = "🟢 YOUR TURN ACTION REQUIRED";
                     document.getElementById('chaal-btn').disabled = false;
                     document.getElementById('pack-btn').disabled = false;
-                    document.getElementById('show-btn').disabled = (t.players.filter(p=>p.status==='playing').length !== 2);
+                    document.getElementById('show-btn').disabled = (t.players.filter(p => p.status === 'playing').length !== 2);
                 } else {
                     document.getElementById('turn-indicator').innerText = `⏳ Waiting for user node ${activeTurnUser.username}...`;
                     document.getElementById('chaal-btn').disabled = true;
@@ -484,7 +508,7 @@
                 document.getElementById('chaal-btn').disabled = true;
                 document.getElementById('pack-btn').disabled = true;
                 document.getElementById('show-btn').disabled = true;
-                if(!t.isActive) document.getElementById('turn-indicator').innerText = "Waiting for Host to allocate matrix...";
+                if (!t.isActive) document.getElementById('turn-indicator').innerText = "Waiting for Host to allocate matrix...";
             }
 
             if (t.host === socket.id && !t.isActive && t.players.length >= 2) {
@@ -495,7 +519,7 @@
         }
 
         function executeTableExitPipeline() {
-            if(activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
+            if (activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
             localStorage.removeItem('tp_active_table_id');
             document.getElementById('table-canvas').classList.add('hidden');
             document.getElementById('endgame-modal').classList.add('hidden');
@@ -506,9 +530,13 @@
         document.getElementById('in-game-exit-btn').addEventListener('click', executeTableExitPipeline);
         document.getElementById('modal-home-btn').addEventListener('click', executeTableExitPipeline);
 
-        document.getElementById('dealer-start-btn').addEventListener('click', () => { if(activeTable) socket.emit('start-table-match', activeTable.id); });
+        document.getElementById('dealer-start-btn').addEventListener('click', () => { if (activeTable) socket.emit('start-table-match', activeTable.id); });
         document.getElementById('chaal-btn').addEventListener('click', () => { socket.emit('table-chaal', activeTable.id); });
-        document.getElementById('pack-btn').addEventListener('click', () => { socket.emit('table-pack', activeTable.id); });
+        document.getElementById('pack-btn').addEventListener('click', () => {
+            if (activeTable) {
+                socket.emit('table-pack', activeTable.id);
+            }
+        });
         document.getElementById('show-btn').addEventListener('click', () => { socket.emit('table-show', activeTable.id); });
 
         document.getElementById('see-cards-btn').addEventListener('click', () => {
@@ -543,8 +571,9 @@
             localStorage.removeItem('tp_active_table_id');
             document.getElementById('table-canvas').classList.add('hidden');
             document.getElementById('dashboard-box').classList.remove('hidden');
-            if(activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
+            if (activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
         });
     </script>
 </body>
+
 </html>
