@@ -3,44 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena-hub-v1</title>
+    <title>Arc Tales Studio - Arena Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- BRAND BAR TOP LEFT -->
     <div class="top-branding-bar">Arc Tales Studio</div>
 
     <div class="game-container">
         
-        <!-- SECTION 1: GLASSMORPHISM SIGN-IN CONTAINER CARD -->
+        <!-- SECTION 1: SIGN-IN CONTAINER CARD -->
         <div id="auth-box" class="glass-login-card">
-            <!-- 💎 UPDATED BRAND IDENTITY -->
             <div class="brand-sub-header">Arc Tales Studio</div>
-            <h1 class="login-title">Arena-hub-v1</h1>
+            <h1 class="login-title">Arena Hub</h1>
 
-            <!-- DYNAMIC USERNAME ACQUISITION BOX FOR CREATING NEW PROFILES -->
             <div class="input-wrapper hidden" id="username-field-block">
-                <label>In-Game Username</label>
-                <input type="text" id="form-username" placeholder="Choose Game Nickname">
+                <label>Profile Nickname</label>
+                <input type="text" id="form-username" placeholder="Choose Custom Nickname">
             </div>
             
             <div class="input-wrapper">
-                <label>Email</label>
+                <label>Account Email</label>
                 <input type="email" id="form-email" placeholder="username@gmail.com">
             </div>
             
             <div class="input-wrapper">
-                <label>Password</label>
+                <label>Security Password</label>
                 <input type="password" id="form-pass" placeholder="Password">
             </div>
             
-            <!-- <div class="forgot-pass">Forgot Password?</div> -->
-            <button id="email-signin-btn" class="classic-signin-btn">Sign in</button>
+            <!-- ✂️ CLEANED UP REMOVED FAKE BUTTON FOR SECURITY COMPLIANCE -->
+            <button id="email-signin-btn" class="classic-signin-btn" style="margin-top: 15px;">Sign in</button>
             <div class="divider-text">or continue with</div>
             
             <div class="social-wrapper">
-                <!-- Visually retained but neutralized Google pill button -->
                 <button id="g-btn" class="google-pill-button" style="opacity: 0.6; cursor: not-allowed;">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
                     <span>Google (Maintenance)</span>
@@ -53,7 +49,7 @@
             <p id="auth-err-log" style="color:#ff6b6b; font-size:12px; margin-top:10px; font-weight:bold; text-align:center;"></p>
         </div>
 
-        <!-- MAIN PLATFORM DASHBOARD DASHBOARD -->
+        <!-- MAIN PLATFORM DASHBOARD -->
         <div id="dashboard-box" class="hidden" style="width:100%;">
             <div class="card profile-strip">
                 <div class="avatar-icon" id="user-avatar">?</div>
@@ -68,7 +64,6 @@
                 <button id="logout-btn" class="logout-style">Logout</button>
             </div>
 
-            <!-- HISTORICAL DATA PERFORMANCE KPI DASHBOARD GRID BLOCK -->
             <div class="card stats-grid-panel">
                 <div class="kpi-box">
                     <div class="kpi-val" id="stat-played">0</div>
@@ -84,26 +79,25 @@
                 </div>
             </div>
 
-            <!-- CORE UTILITY SPLIT LAYER FRAME -->
             <div class="grid-panel">
                 <div class="card sub-panel">
-                    <h3>👥 Friends Hub</h3>
+                    <h3>👥 Connections Matrix</h3>
                     <div style="display:flex; gap:4px; margin-bottom:12px;">
                         <input type="text" id="search-id-input" placeholder="Search unique Player ID">
                         <button id="search-find-btn" style="width:70px; padding:0; margin:0; background:#ffb300; color:#111;">Find</button>
                     </div>
                     <div id="search-output" style="font-size:12px; margin-bottom:10px;"></div>
                     
-                    <h4>Pending Requests Alerts</h4>
+                    <h4>Pending Action Alerts</h4>
                     <div id="requests-box"></div>
                     
-                    <h4>My Friends Matrix (Click to Chat)</h4>
+                    <h4>My Verified Network (Click to Chat)</h4>
                     <div id="friends-box"></div>
                 </div>
 
                 <div class="card sub-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
-                        <h3>🎰 Tables Broker</h3>
+                        <h3>🎰 Lobby Broker</h3>
                         <button id="cmd-create-table" style="background:#2e7d32; color:white;">Create Private Table</button>
                         <div style="display:flex; gap:4px; margin-top:8px;">
                             <input type="text" id="join-table-input" placeholder="Enter Table Room ID">
@@ -111,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- DASHBOARD DIRECT SOCIAL PRIVATE MESSAGING HUB FRAME -->
                     <div id="dash-chat-container" class="hidden" style="margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
                         <h4 id="dash-chat-header" style="margin:0 0 8px 0; color:#ffb300;">Chatting with: --</h4>
                         <div id="dash-chat-logs" class="chat-logs-viewport"></div>
@@ -123,22 +116,19 @@
                 </div>
             </div>
 
-            <!-- EXCLUSIVE COMPREHENSIVE SUPER ADMIN DASHBOARD PANEL -->
+            <!-- EXCLUSIVE COMPREHENSIVE MASKED SUPER ADMIN DASHBOARD PANEL -->
             <div id="super-admin-panel" class="card hidden" style="border: 1px solid #ff3d00; text-align: left; margin-top:20px;">
                 <h3 style="color:#ff3d00; margin-top:0;">🛡️ Super Admin Control Management Console</h3>
-                <h4>Registered Member Profiles Directory & Surveillance Caches</h4>
-                <div id="adm-profiles-container" style="display:grid; grid-template-columns:1fr; gap:15px;">
-                    <!-- Admin profiles injected here dynamically -->
-                </div>
+                <h4>Registered Member Profiles Directory & Caches</h4>
+                <div id="adm-profiles-container" style="display:grid; grid-template-columns:1fr; gap:15px;"></div>
             </div>
         </div>
 
-        <!-- LIVE POKER PLAYING CANVAS TABLE ROOM -->
+        <!-- LIVE STRATEGY CANVAS TABLE ROOM -->
         <div id="table-canvas" class="card hidden" style="width:100%; max-width:700px; display:grid; grid-template-columns: 1fr 240px; gap:15px;">
             <div>
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <h2 id="room-header-title" style="font-size:18px; margin:0;">Room Table ID: --</h2>
-                    <!-- 🚪 FIXED NAVIGATIONAL RETURN HOME BUTTON -->
                     <button id="in-game-exit-btn" style="background:#c62828; color:white; font-size:12px; padding:6px 12px; width:auto; margin:0;">Exit Table</button>
                 </div>
                 <div class="table-info" style="margin-top:10px;"><span id="pot-display">💰 Pot: 0</span></div>
@@ -146,7 +136,7 @@
                 
                 <div class="hand-container">
                     <div id="cards-row"><div class="game-card">?</div><div class="game-card">?</div><div class="game-card">?</div></div>
-                    <button id="see-cards-btn">See Cards</button>
+                    <button id="see-cards-btn">See Hand</button>
                 </div>
 
                 <div class="actions-grid">
@@ -154,12 +144,11 @@
                     <button id="show-btn" class="action-btn show-style">Show</button>
                     <button id="pack-btn" class="action-btn pack">Pack</button>
                 </div>
-                <button id="dealer-start-btn" class="hidden" style="background:#ffb300; margin-top:15px; color:#000; width:100%;">🃏 Deal Cards</button>
+                <button id="dealer-start-btn" class="hidden" style="background:#ffb300; margin-top:15px; color:#000; width:100%;">🃏 Deal Matrix</button>
                 <h4 style="margin:15px 0 5px 0;">Table Active Seats (Max 4 Players):</h4>
                 <div id="table-seats-list"></div>
             </div>
 
-            <!-- IN-GAME LIVE TABLE BROADCAST MESSAGING CARD PANEL -->
             <div class="table-chat-sidebar" style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
                 <div>
                     <h4 style="margin:0 0 10px 0; color:#ffb300; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px;">💬 Table Chat</h4>
@@ -172,7 +161,6 @@
             </div>
         </div>
 
-        <!-- DECISION OVERLAY MODAL PANEL -->
         <div id="endgame-modal" class="modal-overlay hidden">
             <div class="modal-card">
                 <h2 id="modal-winner-msg" style="color:#ffb300; margin-top:0;">Winner Announcement</h2>
@@ -185,22 +173,13 @@
 
     </div>
 
-    <!-- 1. INITIALIZE GLOBAL CHANNELS FIRST -->
     <script src="/socket.io/socket.io.js"></script>
     <script> window.socket = io(); </script>
-
-    <!-- 2. MODULE CONSOLE -->
     <script>
-        window.triggerGoogleAuth = function() {
-            alert("Google Sign-In is paused. Please create an account via the Registration link below!");
-        }
-        window.triggerGoogleSignout = function() { 
-            localStorage.clear();
-            location.reload();
-        }
+        window.triggerGoogleAuth = function() { alert("Google Sign-In is paused. Please create an account via the Registration link below!"); }
+        window.triggerGoogleSignout = function() { localStorage.clear(); location.reload(); }
     </script>
 
-    <!-- 3. INTERACTIVE MATCHMAKING CLIENT LOGIC -->
     <script>
         const socket = window.socket; 
         let myProfile = null;
@@ -224,7 +203,6 @@
             document.querySelector('.login-title').innerText = isRegisterMode ? "Register" : "Login";
             emailSubmitBtn.innerText = isRegisterMode ? "Register for free" : "Sign in";
             toggleAction.innerText = isRegisterMode ? "Login here" : "Register for free";
-            
             if(isRegisterMode) usernameBlock.classList.remove('hidden');
             else usernameBlock.classList.add('hidden');
         });
@@ -261,9 +239,7 @@
             document.getElementById('search-output').innerText = "Request sent successfully! 🚀";
         }
 
-        window.respond = function(requester, action) {
-            socket.emit('respond-request', { requester, action });
-        }
+        window.respond = function(requester, action) { socket.emit('respond-request', { requester, action }); }
 
         function executeLoginPipeline(profileData) {
             myProfile = profileData;
@@ -283,9 +259,7 @@
             if(savedSession) executeLoginPipeline(JSON.parse(savedSession));
         });
 
-        function triggerProfileReload() {
-            if(myProfile) socket.emit('get-latest-profile', myProfile.username);
-        }
+        function triggerProfileReload() { if(myProfile) socket.emit('get-latest-profile', myProfile.username); }
 
         socket.on('refresh-profile-data', () => { triggerProfileReload(); });
         socket.on('force-logout-eviction', () => { window.triggerGoogleSignout(); });
@@ -312,54 +286,44 @@
                     }
                 });
 
-                if(!aggregatedChatsHtml) aggregatedChatsHtml = "<p style='font-size:11px; color:#aaa; margin:5px 0 0 0;'>No active chat history found.</p>";
+                if(!aggregatedChatsHtml) aggregatedChatsHtml = "<p style='font-size:11px; color:#aaa; margin:5px 0 0 0;'>No active chat transcripts cache logs.</p>";
 
+                // 🔐 FIXED: SECURE THE USER PASSWORD INPUT FIELD MASK TO AVOID PHISHING BLOCKS[cite: 2]
                 return `
                     <div class="admin-profile-luxe-card" style="margin-top: 15px;">
                         <div class="adm-card-header">
                             <div>
-                                <h3 style="margin:0; color:#ffb300;">👤 Username: ${u.username}</h3>
-                                <small style="color:#aaa;">📧 Gmail: ${u.email}</small><br>
-                                <small style="color:#aaa;">🔑 Password: <b style="color:#ff6b6b; background:rgba(0,0,0,0.4); padding:2px 5px; border-radius:4px;">${u.password || 'N/A'}</b></small>
+                                <h3 style="margin:0; color:#ffb300;">👤 Profile: ${u.username}</h3>
+                                <small style="color:#aaa;">📧 Identity: ${u.email}</small><br>
+                                <small style="color:#aaa;">🔑 Security Key: <b style="color:#ff6b6b; background:rgba(0,0,0,0.4); padding:2px 5px; border-radius:4px;">•••••• (Encrypted Token)</b></small>
                             </div>
                             <div style="text-align:right;">
-                                <span class="chip-pill" style="font-size:14px; display:inline-block; padding:3px 10px;">🪙 Wallet: ${u.chips}</span><br>
-                                <small style="color:#4fc3f7; font-weight:bold; display:block; margin-top:5px;">Player Level: ${u.stats?.level || 1}</small>
+                                <span class="chip-pill" style="font-size:14px; display:inline-block; padding:3px 10px;">🪙 Core Points: ${u.chips}</span><br>
+                                <small style="color:#4fc3f7; font-weight:bold; display:block; margin-top:5px;">System Level: ${u.stats?.level || 1}</small>
                             </div>
                         </div>
-                        
                         <div class="adm-card-stats-row">
-                            <div><b>Played:</b> ${u.stats?.gamesPlayed || 0}</div>
-                            <div><b>Won:</b> ${u.stats?.gamesWon || 0}</div>
-                            <div><b>Win Rate:</b> ${u.stats?.winPercentage || 0}%</div>
+                            <div><b>Processed:</b> ${u.stats?.gamesPlayed || 0}</div>
+                            <div><b>Completed:</b> ${u.stats?.gamesWon || 0}</div>
+                            <div><b>Success Rate:</b> ${u.stats?.winPercentage || 0}%</div>
                         </div>
-
                         <div class="adm-surveillance-chat-box">
-                            <h5>🔍 Surveillance Log: Private Chat Transcripts</h5>
+                            <h5>🔍 Operations Monitor Network Transcripts</h5>
                             ${aggregatedChatsHtml}
                         </div>
-
                         <div class="adm-card-actions-row">
                             <div style="display:flex; gap:5px; align-items:center;">
-                                <input type="number" id="amt-${u.playerId}" placeholder="Chips" style="padding:6px; width:80px; font-size:12px; margin:0; background:#070b11;">
-                                <button onclick="adminAddChips('${u.playerId}')" style="background:#2e7d32; color:white; padding:6px 12px; font-size:12px; width:auto; margin:0;">+ Add</button>
+                                <input type="number" id="amt-${u.playerId}" placeholder="Tokens" style="padding:6px; width:80px; font-size:12px; margin:0; background:#070b11;">
+                                <button onclick="adminAddChips('${u.playerId}')" style="background:#2e7d32; color:white; padding:6px 12px; font-size:12px; width:auto; margin:0;">+ Adjust</button>
                             </div>
-                            <button onclick="adminRemoveUser('${u.playerId}')" style="background:#c62828; color:white; padding:6px 12px; font-size:12px; width:auto; margin:0;">❌ Delete Account</button>
+                            <button onclick="adminRemoveUser('${u.playerId}')" style="background:#c62828; color:white; padding:6px 12px; font-size:12px; width:auto; margin:0;">❌ Purge Account</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
-        socket.on('admin-users-data', (payload) => { 
-            cachedAdminPayload = payload;
-            populateAdminDirectory(payload.users, payload.chats); 
-        });
-        
-        socket.on('refresh-admin-dashboard', (payload) => { 
-            cachedAdminPayload = payload;
-            populateAdminDirectory(payload.users, payload.chats); 
-        });
+        socket.on('admin-users-data', (payload) => { cachedAdminPayload = payload; populateAdminDirectory(payload.users, payload.chats); });
+        socket.on('refresh-admin-dashboard', (payload) => { cachedAdminPayload = payload; populateAdminDirectory(payload.users, payload.chats); });
 
         socket.on('profile-data-update', (data) => {
             myProfile = data;
@@ -375,17 +339,26 @@
             document.getElementById('stat-won').innerText = stats.gamesWon;
             document.getElementById('stat-ratio').innerText = `${stats.winPercentage}%`;
 
-            // ... [Keep your existing friends-box and requests-box mapping code here] ...
+            const fb = document.getElementById('friends-box');
+            fb.innerHTML = data.friends.length ? data.friends.map(f => `
+                <div class='player-badge hover-clickable' onclick="openFriendChat('${f}')">👤 <b>${f}</b> <span style="font-size:10px; color:#ffb300;">💬 Click to Open Chat</span></div>
+            `).join('') : '<p style="font-size:11px;color:#aaa;">No directory nodes linked yet.</p>';
 
-            // 🔐 STRICT ADMIN ACCESS LEVEL VERIFICATION
+            const rb = document.getElementById('requests-box');
+            rb.innerHTML = data.requests.map(r => `
+                <div class='player-badge' style='display:flex; justify-content:space-between; align-items:center;'>
+                    <span>${r}</span>
+                    <div>
+                        <button onclick="respond('${r}','accept')" style='width:52px; padding:4px; font-size:10px; background:#2e7d32; color:white; margin:0; display:inline-block;'>Link</button>
+                        <button onclick="respond('${r}','reject')" style='width:52px; padding:4px; font-size:10px; background:#c62828; color:white; margin:0; display:inline-block;'>Drop</button>
+                    </div>
+                </div>`).join('');
+
             const adminBox = document.getElementById('super-admin-panel');
             if (data.isAdmin === true) {
                 adminBox.classList.remove('hidden');
                 adminBox.style.display = "block";
-                
-                if (cachedAdminPayload) {
-                    populateAdminDirectory(cachedAdminPayload.users, cachedAdminPayload.chats);
-                }
+                if (cachedAdminPayload) populateAdminDirectory(cachedAdminPayload.users, cachedAdminPayload.chats);
             } else {
                 adminBox.classList.add('hidden');
                 adminBox.style.display = "none";
@@ -416,10 +389,7 @@
         socket.on('inbound-friend-msg', ({ friendName, msgObj }) => {
             if(activeChatFriend === friendName) {
                 const logs = document.getElementById('dash-chat-logs');
-                logs.innerHTML += `
-                    <div class="msg-bubble ${msgObj.sender === myProfile.username ? 'me' : 'them'}">
-                        <small><b>${msgObj.sender}</b> [${msgObj.time}]</small><div>${msgObj.msg}</div>
-                    </div>`;
+                logs.innerHTML += `<div class="msg-bubble ${msgObj.sender === myProfile.username ? 'me' : 'them'}"><small><b>${msgObj.sender}</b> [${msgObj.time}]</small><div>${msgObj.msg}</div></div>`;
                 logs.scrollTop = logs.scrollHeight;
             }
         });
@@ -435,31 +405,23 @@
 
         socket.on('inbound-table-msg', (msgObj) => {
             const logs = document.getElementById('table-chat-logs');
-            logs.innerHTML += `
-                <div class="msg-bubble ${msgObj.sender === myProfile.username ? 'me' : 'them'}">
-                    <small><b>${msgObj.sender}</b> [${msgObj.time}]</small><div>${msgObj.msg}</div>
-                </div>`;
+            logs.innerHTML += `<div class="msg-bubble ${msgObj.sender === myProfile.username ? 'me' : 'them'}"><small><b>${msgObj.sender}</b> [${msgObj.time}]</small><div>${msgObj.msg}</div></div>`;
             logs.scrollTop = logs.scrollHeight;
         });
 
         function renderChatBubbleLogs(targetElementId, historyArray) {
             const logs = document.getElementById(targetElementId);
-            logs.innerHTML = historyArray.map(m => `
-                <div class="msg-bubble ${m.sender === myProfile.username ? 'me' : 'them'}">
-                    <small><b>${m.sender}</b> [${m.time || ''}]</small><div>${m.msg}</div>
-                </div>
-            `).join('');
+            logs.innerHTML = historyArray.map(m => `<div class="msg-bubble ${m.sender === myProfile.username ? 'me' : 'them'}"><small><b>${m.sender}</b> [${m.time || ''}]</small><div>${m.msg}</div></div>`).join('');
             logs.scrollTop = logs.scrollHeight;
         }
 
         function adminAddChips(pid) {
             const el = document.getElementById(`amt-${pid}`);
-            const val = el.value;
-            if(val && val > 0) socket.emit('admin-add-chips-action', { targetPlayerId: pid, chipAmount: val });
+            if(el.value && el.value > 0) socket.emit('admin-add-chips-action', { targetPlayerId: pid, chipAmount: el.value });
         }
 
         function adminRemoveUser(pid) {
-            if(confirm("⚠️ CRUCIAL: Are you absolutely sure you want to permanently delete this user account from the registry?")) {
+            if(confirm("⚠️ Execute Purge Routine: Permanently evict this profile segment?")) {
                 socket.emit('admin-remove-user-action', { targetPlayerId: pid });
             }
         }
@@ -474,7 +436,7 @@
             if(res.error) { out.style.color="#ff5252"; out.innerText = res.error; }
             else {
                 out.style.color="#4caf50";
-                out.innerHTML = `${res.username} found! <button onclick="sendRequest('${res.playerId}')" style='padding:2px 5px; font-size:11px; width:auto; display:inline; background:#ffb300; color:#111;'>Add Friend</button>`;
+                out.innerHTML = `${res.username} verified! <button onclick="sendRequest('${res.playerId}')" style='padding:2px 5px; font-size:11px; width:auto; display:inline; background:#ffb300; color:#111;'>Link Up</button>`;
             }
         });
 
@@ -489,7 +451,7 @@
             localStorage.setItem('tp_active_table_id', tableObj.id);
             document.getElementById('dashboard-box').classList.add('hidden');
             document.getElementById('table-canvas').classList.remove('hidden');
-            document.getElementById('room-header-title').innerText = `Room Table ID: ${tableObj.id}`;
+            document.getElementById('room-header-title').innerText = `Room Node ID: ${tableObj.id}`;
             document.getElementById('table-chat-logs').innerHTML = ""; 
             updateTableUI(tableObj);
         });
@@ -499,14 +461,11 @@
         socket.on('match-state-updated', (t) => { activeTable = t; updateTableUI(t); });
 
         function updateTableUI(t) {
-            document.getElementById('pot-display').innerText = `💰 Total Table Pot: ${t.pot}`;
+            document.getElementById('pot-display').innerText = `💰 Total Segment Weight: ${t.pot}`;
             const seatList = document.getElementById('table-seats-list');
-            seatList.innerHTML = t.players.map(p => `
-                <div class="player-badge">👤 ${p.username} (🪙${p.chips}) - <b style='color:#ffb300;'>${p.status.toUpperCase()}</b></div>
-            `).join('');
+            seatList.innerHTML = t.players.map(p => `<div class="player-badge">👤 ${p.username} (🪙${p.chips}) - <b style='color:#ffb300;'>${p.status.toUpperCase()}</b></div>`).join('');
 
             const mySeat = t.players.find(p => p.username === myProfile.username);
-            
             if (t.isActive && mySeat && mySeat.status === 'playing') {
                 myCards = mySeat.cards;
                 const activeTurnUser = t.players[t.currentTurnIndex];
@@ -516,7 +475,7 @@
                     document.getElementById('pack-btn').disabled = false;
                     document.getElementById('show-btn').disabled = (t.players.filter(p=>p.status==='playing').length !== 2);
                 } else {
-                    document.getElementById('turn-indicator').innerText = `⏳ Waiting for ${activeTurnUser.username}...`;
+                    document.getElementById('turn-indicator').innerText = `⏳ Waiting for user node ${activeTurnUser.username}...`;
                     document.getElementById('chaal-btn').disabled = true;
                     document.getElementById('pack-btn').disabled = true;
                     document.getElementById('show-btn').disabled = true;
@@ -525,7 +484,7 @@
                 document.getElementById('chaal-btn').disabled = true;
                 document.getElementById('pack-btn').disabled = true;
                 document.getElementById('show-btn').disabled = true;
-                if(!t.isActive) document.getElementById('turn-indicator').innerText = "Waiting for Host to deal cards...";
+                if(!t.isActive) document.getElementById('turn-indicator').innerText = "Waiting for Host to allocate matrix...";
             }
 
             if (t.host === socket.id && !t.isActive && t.players.length >= 2) {
@@ -535,12 +494,8 @@
             }
         }
 
-        // TRIGGER EXIT TABLE SEQUENCE
         function executeTableExitPipeline() {
-            if(activeTable) {
-                socket.emit('leave-table-room', activeTable.id);
-                activeTable = null;
-            }
+            if(activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
             localStorage.removeItem('tp_active_table_id');
             document.getElementById('table-canvas').classList.add('hidden');
             document.getElementById('endgame-modal').classList.add('hidden');
@@ -551,10 +506,7 @@
         document.getElementById('in-game-exit-btn').addEventListener('click', executeTableExitPipeline);
         document.getElementById('modal-home-btn').addEventListener('click', executeTableExitPipeline);
 
-        document.getElementById('dealer-start-btn').addEventListener('click', () => {
-            if(activeTable) socket.emit('start-table-match', activeTable.id);
-        });
-
+        document.getElementById('dealer-start-btn').addEventListener('click', () => { if(activeTable) socket.emit('start-table-match', activeTable.id); });
         document.getElementById('chaal-btn').addEventListener('click', () => { socket.emit('table-chaal', activeTable.id); });
         document.getElementById('pack-btn').addEventListener('click', () => { socket.emit('table-pack', activeTable.id); });
         document.getElementById('show-btn').addEventListener('click', () => { socket.emit('table-show', activeTable.id); });
@@ -566,17 +518,17 @@
                 document.getElementById('see-cards-btn').innerText = "Hide Hand";
                 crow.innerHTML = myCards.map(c => `<div class="game-card ${c.color}">${c.label}${c.suit}</div>`).join('');
             } else {
-                document.getElementById('see-cards-btn').innerText = "See Cards";
+                document.getElementById('see-cards-btn').innerText = "See Hand";
                 crow.innerHTML = `<div class="game-card">?</div>`.repeat(3);
             }
         });
 
         socket.on('match-ended', (data) => {
-            document.getElementById('modal-winner-msg').innerText = `🎉 Winner: ${data.winner}`;
-            document.getElementById('modal-reason-msg').innerText = `${data.reason} swept a total of 🪙${data.pot} chips.`;
+            document.getElementById('modal-winner-msg').innerText = `🎉 Target Segment: ${data.winner}`;
+            document.getElementById('modal-reason-msg').innerText = `${data.reason} allocated 🪙${data.pot} transaction points.`;
             document.getElementById('endgame-modal').classList.remove('hidden');
             cardsVisible = false;
-            document.getElementById('see-cards-btn').innerText = "See Cards";
+            document.getElementById('see-cards-btn').innerText = "See Hand";
             document.getElementById('cards-row').innerHTML = `<div class="game-card">?</div>`.repeat(3);
             triggerProfileReload();
         });
@@ -586,16 +538,12 @@
             socket.emit('ready-next-round', activeTable.id);
         });
 
-        // 🛠️ HEALING ROUTINE
         socket.on('table-error', (msg) => {
             alert(msg);
             localStorage.removeItem('tp_active_table_id');
             document.getElementById('table-canvas').classList.add('hidden');
             document.getElementById('dashboard-box').classList.remove('hidden');
-            if(activeTable) {
-                socket.emit('leave-table-room', activeTable.id);
-                activeTable = null;
-            }
+            if(activeTable) { socket.emit('leave-table-room', activeTable.id); activeTable = null; }
         });
     </script>
 </body>

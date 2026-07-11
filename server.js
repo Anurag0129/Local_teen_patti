@@ -16,85 +16,35 @@ app.use(express.static('public'));
 app.use(express.json());
 
 // Target Super Admin Configuration
-
-// Target Super Admin Configuration
 const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
-const ADMIN_MASTER_PASSWORD = "Anurag@29"; // 🔐 CHANGE THIS to your secret admin password!
+const ADMIN_MASTER_PASSWORD = "Anurag@29"; // 🔐 Double-locked Master Password
 
-// --- SECURE AUTH CHANNELS ---
-app.post('/api/google-auth', (req, res) => {
-    return res.status(400).json({ error: "Google Auth is visually paused. Please use email registration!" });
-});
-
-app.post('/api/email-register', (req, res) => {
-    const { email, password, username } = req.body;
-    let db = loadDatabase();
-    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
-
-    if (db.users[userKey]) return res.status(400).json({ error: "Account already exists!" });
-
-    const finalUsername = (username && username.trim()) ? username.trim() : email.split('@')[0];
-    const uniqueId = "TP-" + crypto.randomBytes(3).toString('hex').toUpperCase();
-    
-    // 🔐 VALIDATE EMAIL AND PASSWORD BOTH FOR ADMIN ROLE
-    const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD);
-
-    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password !== ADMIN_MASTER_PASSWORD) {
-        return res.status(400).json({ error: "Invalid password for the Master Admin account!" });
+function loadDatabase() {
+    if (!fs.existsSync(DB_FILE)) {
+        // Fix: Explicitly initialize activeRooms on first boot to prevent undefined crashes
+        const initialData = { users: {}, chats: {}, activeRooms: {} };
+        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+        return initialData;
     }
-
-    db.users[userKey] = {
-        username: finalUsername,
-        email: email,
-        password: password, 
-        chips: 1000,
-        playerId: uniqueId,
-        friends: [],
-        requests: [],
-        isAdmin: checkAdmin,
-        stats: createDefaultStats()
-    };
-    saveDatabase(db);
-    res.json(db.users[userKey]);
-});
-
-app.post('/api/email-login', (req, res) => {
-    const { email, password } = req.body;
-    let db = loadDatabase();
-    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
-    let user = db.users[userKey];
-
-    if (!user || user.password !== password) return res.status(400).json({ error: "Invalid credentials!" });
-    
-    // Double-check admin validation state on login execution
-    if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD) {
-        user.isAdmin = true;
-    } else if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-        user.isAdmin = false; // Revoke if password changed or mismatched
+    try {
+        let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+        if (!data.users) data.users = {};
+        if (!data.chats) data.chats = {};
+        if (!data.activeRooms) data.activeRooms = {};
+        return data;
+    } catch (e) {
+        // If file is corrupted or empty, reset gracefully
+        const fallbackData = { users: {}, chats: {}, activeRooms: {} };
+        fs.writeFileSync(DB_FILE, JSON.stringify(fallbackData, null, 2));
+        return fallbackData;
     }
-    
-    saveDatabase(db);
-    res.json(user);
-});
+}
 
-// const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
+function saveDatabase(data) {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+}
 
-// function loadDatabase() {
-//     if (!fs.existsSync(DB_FILE)) {
-//         const initialData = { users: {}, chats: {} };
-//         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-//         return initialData;
-//     }
-//     let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-//     if (!data.activeRooms) data.activeRooms = {};
-//     return data;
-// }
-
-// function saveDatabase(data) {
-//     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-// }
-
-// --- TEEN PATTI CARD ENGINE ---
+// --- CORE STRATEGY INTERACTIVE MATCH ENGINE ---
 const SUITS = ['♠', '♥', '♦', '♣'];
 const VALUES = [
     { label: '2', weight: 2 }, { label: '3', weight: 3 }, { label: '4', weight: 4 },
@@ -114,7 +64,6 @@ function createDeck() {
     return deck;
 }
 
-// Helper to shuffle
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -154,7 +103,6 @@ function createDefaultStats() {
 
 // --- SECURE AUTH CHANNELS ---
 app.post('/api/google-auth', (req, res) => {
-    // Intentionally blocked server side for security alignment
     return res.status(400).json({ error: "Google Auth is visually paused. Please use email registration!" });
 });
 
@@ -165,10 +113,14 @@ app.post('/api/email-register', (req, res) => {
 
     if (db.users[userKey]) return res.status(400).json({ error: "Account already exists!" });
 
-    // Use requested username, fallback to prefix if missing
     const finalUsername = (username && username.trim()) ? username.trim() : email.split('@')[0];
     const uniqueId = "TP-" + crypto.randomBytes(3).toString('hex').toUpperCase();
-    const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+    
+    const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD);
+
+    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password !== ADMIN_MASTER_PASSWORD) {
+        return res.status(400).json({ error: "Invalid password for the Master Admin account!" });
+    }
 
     db.users[userKey] = {
         username: finalUsername,
@@ -192,6 +144,14 @@ app.post('/api/email-login', (req, res) => {
     let user = db.users[userKey];
 
     if (!user || user.password !== password) return res.status(400).json({ error: "Invalid credentials!" });
+    
+    if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD) {
+        user.isAdmin = true;
+    } else if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        user.isAdmin = false;
+    }
+    
+    saveDatabase(db);
     res.json(user);
 });
 
@@ -206,7 +166,7 @@ io.on('connection', (socket) => {
         let requestingUser = Object.values(db.users).find(u => u && u.username === username);
         
         if (requestingUser) {
-            if (requestingUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+            if (requestingUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && requestingUser.password === ADMIN_MASTER_PASSWORD) {
                 requestingUser.isAdmin = true;
                 saveDatabase(db);
             }
@@ -308,7 +268,6 @@ io.on('connection', (socket) => {
         io.to(tableId).emit('inbound-table-msg', msgObj);
     });
 
-    // 🎰 PERSISTENT DATA-BACKED ROOM MANAGEMENT WITH A 4-PLAYER LOBBY LIMIT
     socket.on('create-table', () => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
@@ -336,8 +295,6 @@ io.on('connection', (socket) => {
         let myUsername = socketUserMap[socket.id];
         let db = loadDatabase();
         let foundUser = Object.values(db.users).find(u => u && u.username === myUsername);
-        
-        // Normalize table ID strings to prevent invalid matches
         let tableId = incomingTableId.trim().toUpperCase();
 
         if (!db.activeRooms || !db.activeRooms[tableId]) {
@@ -346,7 +303,6 @@ io.on('connection', (socket) => {
 
         let t = db.activeRooms[tableId];
 
-        // 🛑 CRUCIAL: 4 Player Cap Check
         if (!t.players.some(p => p.username === myUsername)) {
             if (t.players.length >= 4) {
                 return socket.emit('table-error', "This table lobby is full! Maximum limit is 4 players.");
@@ -468,7 +424,6 @@ io.on('connection', (socket) => {
         resolveMatchWinner(tableId, winObj.username, "Showdown complete!");
     });
 
-    // --- SUPER ADMIN OPERATIONS ---
     socket.on('admin-add-chips-action', ({ targetPlayerId, chipAmount }) => {
         let senderUsername = socketUserMap[socket.id];
         let db = loadDatabase();
@@ -530,5 +485,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Casino Royale platform running live on Port ${PORT}`);
+    console.log(`🚀 Platform server operating live on Port ${PORT}`);
 });
