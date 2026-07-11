@@ -16,22 +16,83 @@ app.use(express.static('public'));
 app.use(express.json());
 
 // Target Super Admin Configuration
+
+// Target Super Admin Configuration
 const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
+const ADMIN_MASTER_PASSWORD = "YOUR_CHOSEN_SECURE_PASSWORD"; // 🔐 CHANGE THIS to your secret admin password!
 
-function loadDatabase() {
-    if (!fs.existsSync(DB_FILE)) {
-        const initialData = { users: {}, chats: {} };
-        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-        return initialData;
+// --- SECURE AUTH CHANNELS ---
+app.post('/api/google-auth', (req, res) => {
+    return res.status(400).json({ error: "Google Auth is visually paused. Please use email registration!" });
+});
+
+app.post('/api/email-register', (req, res) => {
+    const { email, password, username } = req.body;
+    let db = loadDatabase();
+    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
+
+    if (db.users[userKey]) return res.status(400).json({ error: "Account already exists!" });
+
+    const finalUsername = (username && username.trim()) ? username.trim() : email.split('@')[0];
+    const uniqueId = "TP-" + crypto.randomBytes(3).toString('hex').toUpperCase();
+    
+    // 🔐 VALIDATE EMAIL AND PASSWORD BOTH FOR ADMIN ROLE
+    const checkAdmin = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD);
+
+    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password !== ADMIN_MASTER_PASSWORD) {
+        return res.status(400).json({ error: "Invalid password for the Master Admin account!" });
     }
-    let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-    if (!data.activeRooms) data.activeRooms = {};
-    return data;
-}
 
-function saveDatabase(data) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-}
+    db.users[userKey] = {
+        username: finalUsername,
+        email: email,
+        password: password, 
+        chips: 1000,
+        playerId: uniqueId,
+        friends: [],
+        requests: [],
+        isAdmin: checkAdmin,
+        stats: createDefaultStats()
+    };
+    saveDatabase(db);
+    res.json(db.users[userKey]);
+});
+
+app.post('/api/email-login', (req, res) => {
+    const { email, password } = req.body;
+    let db = loadDatabase();
+    let userKey = email.trim().replace(/[.$#[\]]/g, "_");
+    let user = db.users[userKey];
+
+    if (!user || user.password !== password) return res.status(400).json({ error: "Invalid credentials!" });
+    
+    // Double-check admin validation state on login execution
+    if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_MASTER_PASSWORD) {
+        user.isAdmin = true;
+    } else if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        user.isAdmin = false; // Revoke if password changed or mismatched
+    }
+    
+    saveDatabase(db);
+    res.json(user);
+});
+
+// const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
+
+// function loadDatabase() {
+//     if (!fs.existsSync(DB_FILE)) {
+//         const initialData = { users: {}, chats: {} };
+//         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
+//         return initialData;
+//     }
+//     let data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+//     if (!data.activeRooms) data.activeRooms = {};
+//     return data;
+// }
+
+// function saveDatabase(data) {
+//     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+// }
 
 // --- TEEN PATTI CARD ENGINE ---
 const SUITS = ['♠', '♥', '♦', '♣'];

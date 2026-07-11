@@ -375,28 +375,15 @@
             document.getElementById('stat-won').innerText = stats.gamesWon;
             document.getElementById('stat-ratio').innerText = `${stats.winPercentage}%`;
 
-            const fb = document.getElementById('friends-box');
-            fb.innerHTML = data.friends.length ? data.friends.map(f => `
-                <div class='player-badge hover-clickable' onclick="openFriendChat('${f}')">👤 <b>${f}</b> <span style="font-size:10px; color:#ffb300;">💬 Click to Text</span></div>
-            `).join('') : '<p style="font-size:11px;color:#aaa;">No friends linked yet.</p>';
+            // ... [Keep your existing friends-box and requests-box mapping code here] ...
 
-            const rb = document.getElementById('requests-box');
-            rb.innerHTML = data.requests.map(r => `
-                <div class='player-badge' style='display:flex; justify-content:space-between; align-items:center;'>
-                    <span>${r}</span>
-                    <div>
-                        <button onclick="respond('${r}','accept')" style='width:52px; padding:4px; font-size:10px; background:#2e7d32; color:white; margin:0; display:inline-block;'>Accept</button>
-                        <button onclick="respond('${r}','reject')" style='width:52px; padding:4px; font-size:10px; background:#c62828; color:white; margin:0; display:inline-block;'>Deny</button>
-                    </div>
-                </div>
-            `).join('');
-
+            // 🔐 STRICT ADMIN ACCESS LEVEL VERIFICATION
             const adminBox = document.getElementById('super-admin-panel');
-            if(data.isAdmin === true || data.email.toLowerCase() === "anuragnarkhede02@gmail.com") {
+            if (data.isAdmin === true) {
                 adminBox.classList.remove('hidden');
                 adminBox.style.display = "block";
                 
-                if(cachedAdminPayload) {
+                if (cachedAdminPayload) {
                     populateAdminDirectory(cachedAdminPayload.users, cachedAdminPayload.chats);
                 }
             } else {
