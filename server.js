@@ -19,7 +19,7 @@ app.use(express.json());
 
 // Target Super Admin Configuration
 const ADMIN_EMAIL = "anuragnarkhede02@gmail.com";
-const ADMIN_MASTER_PASSWORD = "YOUR_CHOSEN_SECURE_PASSWORD"; // 🔐 CHANGE THIS to your secret admin password!
+const ADMIN_MASTER_PASSWORD = "Anurag@29"; // 🔐 CHANGE THIS to your secret admin password!
 
 // --- SECURE AUTH CHANNELS ---
 app.post('/api/google-auth', (req, res) => {
